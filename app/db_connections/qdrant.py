@@ -1,5 +1,7 @@
 import os
+from pyexpat import model
 from qdrant_client import AsyncQdrantClient, models
+from qdrant_client.models import Distance, VectorParams, PointStruct
 import asyncio
 from dotenv import load_dotenv
 
@@ -16,9 +18,11 @@ class QdrantConnection:
     async def create_collection(self, collection_name):
        try:
         result = await self.client.create_collection(
-                collection_name=f"{collection_name}",
-                vectors_config=models.VectorParams(size=100, distance=models.Distance.COSINE))
-        
+                collection_name=collection_name,
+                vectors_config=VectorParams(size=512, distance=Distance.EUCLID),
+                optimizers_config=models.OptimizersConfigDiff(memmap_threshold=20000), #memmap config,
+                hnsw_config=models.HnswConfigDiff(on_disk=True) #index
+                )
         return result
        
        except Exception as e:
@@ -34,7 +38,7 @@ class QdrantConnection:
     async def deletect_collection(self, collection_name):
 
         try:
-            result = self.client.delete_collection(collection_name=f"{collection_name}")
+            result = await self.client.delete_collection(collection_name=collection_name)
             return result
 
         except Exception as e:
@@ -55,6 +59,22 @@ class QdrantConnection:
         
         except Exception as e:
             print(e)
+
+    async def batch_upload_points(self, collection_name,):
+        try:
+            await self.client.upsert(
+                collection_name=collection_name,
+                points = models.Batch(
+                    payloads=[],
+                    vectors=[]
+
+                )
+            )
+        except Exception as e:
+            print(e)
+    
+    async def upload_points_to_collection(self,collection_name):
+        pass
 
 qdrant_client = QdrantConnection()
 

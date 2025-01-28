@@ -100,7 +100,7 @@ class FaceAI:
         result = DeepFace.find(image,
                                db_path=""
                                )
-        pass
+        return 
 
     async def detect_emotion(self,image):
         try:
@@ -148,11 +148,11 @@ class FaceAI:
                                 if r: 
                                     embeddings.append(r.get("embedding"))
                                     file_path.append(img_path)      
-                        
+                
                         except Exception as e:
                             print(e)
                 
-                return {"file_path":file_path,"embeddings":embeddings}
+                return {embeddings, file_path}
             
             except Exception as e:
                 print(e)
@@ -179,6 +179,3 @@ class FaceAI:
 
 
 
-
-
-if __name__ == "__main__":
