@@ -1,0 +1,20 @@
+.venv
+
+#EXCLUDE APP DIRECTORY
+!app/**
+
+/audio/
+/cropped_faces/
+/experiments/
+/images/
+/src/
+/videos/
+.env
+.dockerignore
+main.py
+routes.py
+run.py
+test.txt
+yolov11l-face.py
+
+
